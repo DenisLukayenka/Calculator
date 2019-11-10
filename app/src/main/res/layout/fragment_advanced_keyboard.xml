@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/advancedKeyboardConstraint"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".AdvancedKeyboardFragment">
+
+        <Button
+            android:id="@+id/button_left_bracket"
+            style="@style/action_button_style"
+            android:text="@string/left_bracket_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button_right_bracket"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/button_default_fragment"
+            app:layout_constraintTop_toBottomOf="@+id/button_exp" />
+
+        <Button
+            android:id="@+id/button_factorial"
+            style="@style/action_button_style"
+            android:text="@string/factorial_text"
+            app:layout_constraintBottom_toTopOf="@+id/button_right_bracket"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/button_exp"
+            app:layout_constraintTop_toBottomOf="@+id/button_pow" />
+
+        <Button
+            android:id="@+id/button_exp"
+            style="@style/action_button_style"
+            android:text="@string/exp_text"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toTopOf="@+id/button_left_bracket"
+            app:layout_constraintEnd_toStartOf="@+id/button_factorial"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/button_pi"
+            app:layout_constraintTop_toBottomOf="@+id/button_log" />
+
+        <Button
+            android:id="@+id/button_radical"
+            style="@style/action_button_style"
+            android:text="@string/radical_text"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toTopOf="@+id/button_pow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/button_deg"
+            app:layout_constraintTop_toBottomOf="@+id/button_tan" />
+
+        <Button
+            android:id="@+id/button_sin"
+            style="@style/action_button_style"
+            android:text="@string/sinus_text"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toTopOf="@+id/button_inv"
+            app:layout_constraintEnd_toStartOf="@+id/button_cos"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_cos"
+            style="@style/action_button_style"
+            android:text="@string/cosinus_text"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toTopOf="@+id/button_deg"
+            app:layout_constraintEnd_toStartOf="@+id/button_tan"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/button_sin"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_tan"
+            style="@style/action_button_style"
+            android:text="@string/tangent_text"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toTopOf="@+id/button_radical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/button_cos"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_inv"
+            style="@style/action_button_style"
+            android:text="@string/inv_text"
+            app:layout_constraintBottom_toTopOf="@+id/button_ln"
+            app:layout_constraintEnd_toStartOf="@+id/button_deg"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_sin" />
+
+        <Button
+            android:id="@+id/button_deg"
+            style="@style/action_button_style"
+            android:text="@string/deg_text"
+            app:layout_constraintBottom_toTopOf="@+id/button_log"
+            app:layout_constraintEnd_toStartOf="@+id/button_radical"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/button_inv"
+            app:layout_constraintTop_toBottomOf="@+id/button_cos" />
+
+        <Button
+            android:id="@+id/button_ln"
+            style="@style/action_button_style"
+            android:text="@string/ln_text"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toTopOf="@+id/button_pi"
+            app:layout_constraintEnd_toStartOf="@+id/button_log"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_inv" />
+
+        <Button
+            android:id="@+id/button_log"
+            style="@style/action_button_style"
+            android:text="@string/log_text"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toTopOf="@+id/button_exp"
+            app:layout_constraintEnd_toStartOf="@+id/button_pow"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/button_ln"
+            app:layout_constraintTop_toBottomOf="@+id/button_deg" />
+
+        <Button
+            android:id="@+id/button_pow"
+            style="@style/action_button_style"
+            android:text="@string/pow_text"
+            app:layout_constraintBottom_toTopOf="@+id/button_factorial"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/button_log"
+            app:layout_constraintTop_toBottomOf="@+id/button_radical" />
+
+        <Button
+            android:id="@+id/button_pi"
+            style="@style/action_button_style"
+            android:text="@string/pi_text"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toTopOf="@+id/button_default_fragment"
+            app:layout_constraintEnd_toStartOf="@+id/button_exp"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_ln" />
+
+        <Button
+            android:id="@+id/button_default_fragment"
+            style="@style/action_button_style"
+            android:text="@string/button_keyboard_switch"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button_left_bracket"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_pi" />
+
+        <Button
+            android:id="@+id/button_right_bracket"
+            style="@style/action_button_style"
+            android:text="@string/right_bracket_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/button_left_bracket"
+            app:layout_constraintTop_toBottomOf="@+id/button_factorial" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
