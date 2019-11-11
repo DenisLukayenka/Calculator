@@ -17,7 +17,6 @@ import kotlin.math.absoluteValue
 class DefaultKeyboardFragment : Fragment() {
     private lateinit var binding: DefaultKeyboardFragmentBinding
     private lateinit var viewModel: SharedViewModel
-    private var isCommandActive: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,7 +49,7 @@ class DefaultKeyboardFragment : Fragment() {
             if(longResult.toDouble() == result){
                 viewModel.updateResultValue("= $longResult")
             } else {
-                viewModel.updateResultValue("= ${result.toString().substring(0, 8)}")
+                viewModel.updateResultValue("= $result")
             }
 
         } catch (ex: Exception) {
@@ -76,41 +75,62 @@ class DefaultKeyboardFragment : Fragment() {
     private fun clearExpressionCommandAndResult(){
         viewModel.result.value = ""
         viewModel.expression.value = ""
-        isCommandActive = false
+        viewModel.isCommandActive = false
     }
 
     private fun appendExpressionCommand(command: String){
         removeExpressionData()
 
-        if(!isCommandActive) {
-            var actualResultValue = viewModel.result.value!!
-            if (actualResultValue.isNotEmpty()) {
-                actualResultValue = actualResultValue.substring(2, actualResultValue.length)
+        if(viewModel.isCommandActive){
+            val expression = viewModel.expression.value!!
+            if(expression.isNotEmpty()){
+                viewModel.expression.value = expression.substring(0, expression.length - 1)
             }
-
-            viewModel.addExpressionData(actualResultValue)
-            updateExpressionAndResultData(command)
-            isCommandActive = true
         }
+
+        var actualResultValue = viewModel.result.value!!
+        if (actualResultValue.isNotEmpty()) {
+            actualResultValue = actualResultValue.substring(2, actualResultValue.length)
+        }
+
+        viewModel.addExpressionData(actualResultValue)
+        updateExpressionAndResultData(command)
+        viewModel.isCommandActive = true
     }
 
     private fun appendNumberValue(number: String){
         removeExpressionData()
+        val regex = Regex("(\\d*0)\$")
+        val expression = viewModel.expression.value!!
 
-        if(viewModel.expression.value!!.isEmpty() ||
-            (viewModel.expression.value!!.isNotEmpty() && viewModel.expression.value!!.last() != '0')){
-            updateExpressionAndResultData(number)
-            isCommandActive = false
+        if(regex.containsMatchIn(expression)){
+            viewModel.expression.value = expression.substring(0, expression.length - 1)
         }
+
+        updateExpressionAndResultData(number)
+        viewModel.isCommandActive = false
     }
 
-    private fun appendDotValue(dot:String){
-        if(!isCommandActive){
+    private fun appendDotValue(dot: String){
+        if(!viewModel.isCommandActive && viewModel.result.value!!.isEmpty() && viewModel.expression.value!!.isNotEmpty()){
             val regex = Regex("\\d+(\\.)\\d*\$")
 
             if(!regex.containsMatchIn(viewModel.expression.value!!)){
                 updateExpressionAndResultData(dot)
+                viewModel.isCommandActive = true
             }
+        }
+    }
+
+    private fun appendZeroValue(zero: String){
+        removeExpressionData()
+
+        val regex = Regex("([1-9]+)|(\\d+\\.)\$")
+
+        if(regex.containsMatchIn(viewModel.expression.value!!)
+            || viewModel.isCommandActive
+            || viewModel.expression.value!!.isEmpty()){
+            updateExpressionAndResultData(zero)
         }
     }
 
@@ -126,7 +146,7 @@ class DefaultKeyboardFragment : Fragment() {
 
     private fun setNumericListeners(){
         binding.apply {
-            button0.setOnClickListener { appendNumberValue("0") }
+            button0.setOnClickListener { appendZeroValue("0") }
             button1.setOnClickListener { appendNumberValue("1") }
             button2.setOnClickListener { appendNumberValue("2") }
             button3.setOnClickListener { appendNumberValue("3") }
