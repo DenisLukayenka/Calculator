@@ -2,6 +2,7 @@ package com.denis.calculator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
@@ -19,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         viewModel = ViewModelProviders.of(this)[SharedViewModel::class.java]
-        viewModel.command.observe(this, Observer<String> { item ->
+        viewModel.expression.observe(this, Observer<String> { item ->
             binding.actualCommandText.text = item
         })
         viewModel.result.observe(this, Observer<String> { item ->

@@ -29,7 +29,8 @@
                 android:singleLine="true"
                 android:text="Expression"
                 android:textColor="#B0FFFFFF"
-                android:textSize="@dimen/actualCommandTextSize" />
+                android:textSize="@dimen/actualCommandTextSize"
+                app:autoSizeTextType="uniform" />
 
             <TextView
                 android:id="@+id/commandResultText"
