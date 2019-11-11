@@ -7,6 +7,7 @@
         android:id="@+id/defaultKeyboardConstraint"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/white"
         tools:context=".DefaultKeyboardFragment">
 
         <Button
@@ -22,7 +23,9 @@
         <Button
             android:id="@+id/button_result"
             style="@style/action_button_style"
+            android:background="@drawable/result_button_shape"
             android:text="@string/button_result_text"
+            android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -31,7 +34,7 @@
 
         <Button
             android:id="@+id/button_fragment_advanced"
-            style="@style/default_button_style"
+            style="@style/action_button_style"
             android:text="@string/button_keyboard_switch"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button_0"
@@ -109,6 +112,21 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_clear"
             app:layout_constraintTop_toTopOf="parent" />
+
+      <!--  <ImageView
+            android:id="@+id/button_remove2"
+            style="@style/action_button_style"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/backspace_description"
+            android:cropToPadding="false"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/backspace_icon"
+            app:layout_constraintBottom_toTopOf="@+id/button_8"
+            app:layout_constraintEnd_toStartOf="@+id/button_modulo"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/button_clear"
+            app:layout_constraintTop_toTopOf="parent" /> -->
 
         <Button
             android:id="@+id/button_divide"
@@ -209,5 +227,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_2"
             app:layout_constraintTop_toBottomOf="@+id/button_6" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

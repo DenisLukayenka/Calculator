@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProviders
 import com.denis.calculator.databinding.FragmentAdvancedKeyboardBinding
 
 /**
@@ -15,19 +16,25 @@ import com.denis.calculator.databinding.FragmentAdvancedKeyboardBinding
  */
 class AdvancedKeyboardFragment : Fragment() {
 
+    private lateinit var binding: FragmentAdvancedKeyboardBinding
+    private lateinit var viewModel: SharedViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<FragmentAdvancedKeyboardBinding>(
+        binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_advanced_keyboard,
             container,
             false
         )
-
         binding.buttonDefaultFragment.setOnClickListener { switchToDefaultKeyboard() }
+
+        viewModel = activity?.run {
+            ViewModelProviders.of(this)[SharedViewModel::class.java]
+        } ?: throw Exception("Invalid Activity")
 
         return binding.root
     }

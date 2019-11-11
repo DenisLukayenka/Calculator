@@ -16,14 +16,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
         viewModel = ViewModelProviders.of(this)[SharedViewModel::class.java]
         viewModel.command.observe(this, Observer<String> { item ->
             binding.actualCommandText.text = item
         })
-
-        binding.sharedViewModel = viewModel
+        viewModel.result.observe(this, Observer<String> { item ->
+            binding.commandResultText.text = item
+        })
 
         val defaultKeyboard = DefaultKeyboardFragment()
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()

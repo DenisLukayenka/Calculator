@@ -37,4 +37,5 @@
     <string name="factorial_text">!</string>
     <string name="pow_text">^</string>
     <string name="radical_text">rad</string>
+    <string name="backspace_description">Backspace button</string>
 </resources>

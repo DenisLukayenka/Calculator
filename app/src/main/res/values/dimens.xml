@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="actualCommandTextSize">24sp</dimen>
-    <dimen name="previewCommandTextSize">18sp</dimen>
+    <dimen name="previewCommandTextSize">24sp</dimen>
+    <dimen name="actualCommandTextSize">35sp</dimen>
+    <dimen name="resultCommandTextSize">40sp</dimen>
     <dimen name="buttonsVerticalWeight">6</dimen>
     <dimen name="commandsVerticalWeight">3</dimen>
 </resources>
