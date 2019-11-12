@@ -9,12 +9,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
 import com.denis.calculator.databinding.DefaultKeyboardFragmentBinding
+import com.denis.calculator.functions.*
+import com.denis.calculator.operators.*
 import net.objecthunter.exp4j.ExpressionBuilder
 import java.util.*
-import kotlin.math.absoluteValue
-
 
 class DefaultKeyboardFragment : Fragment() {
+
     private lateinit var binding: DefaultKeyboardFragmentBinding
     private lateinit var viewModel: SharedViewModel
 
@@ -42,15 +43,31 @@ class DefaultKeyboardFragment : Fragment() {
 
     private fun calculateResultValue(){
         try {
-            val expression = ExpressionBuilder(viewModel.expression.value!!.toLowerCase(Locale.ENGLISH)).build()
+            var actualExpression = viewModel.expression.value!!.toLowerCase(Locale.ENGLISH)
+
+            while (viewModel.bracketsToClose > 0){
+                actualExpression += ")"
+                viewModel.bracketsToClose--
+            }
+
+            val expression = ExpressionBuilder(actualExpression)
+                .functions(FuncLg(), FuncLn())
+                .operator(OperatorFactorial(), DegreeOperator())
+                .build()
             val result = expression.evaluate()
             val longResult = result.toLong()
 
             if(longResult.toDouble() == result){
-                viewModel.updateResultValue("= $longResult")
+                viewModel.updateResultValue(longResult.toString())
             } else {
-                viewModel.updateResultValue("= $result")
+                var resultText = result.toString()
+                if(resultText.length > 8){
+                    resultText = resultText.substring(0, 8)
+                }
+                viewModel.updateResultValue(resultText)
             }
+
+            viewModel.expression.value = actualExpression
 
         } catch (ex: Exception) {
             viewModel.updateResultValue("Error")
@@ -63,48 +80,39 @@ class DefaultKeyboardFragment : Fragment() {
         transaction?.replace(R.id.fragmentsLayout, advancedKeyboard)
         transaction?.commit()
     }
-    private fun removeLastSymbol(){
-        val expressionCommand = viewModel.expression.value!!
 
-        if(expressionCommand.isNotEmpty()){
-            viewModel.expression.value = expressionCommand.substring(0, expressionCommand.length - 1)
-        }
-
-        viewModel.result.value = ""
-    }
     private fun clearExpressionCommandAndResult(){
-        viewModel.result.value = ""
-        viewModel.expression.value = ""
+        viewModel.resultValue.value = ""
+        viewModel.expression.value = "0"
         viewModel.isCommandActive = false
+        viewModel.bracketsToClose = 0
     }
 
     private fun appendExpressionCommand(command: String){
-        removeExpressionData()
+        viewModel.clearExpressionData()
 
         if(viewModel.isCommandActive){
             val expression = viewModel.expression.value!!
             if(expression.isNotEmpty()){
-                viewModel.expression.value = expression.substring(0, expression.length - 1)
+                viewModel.removeLastExpressionSymbol()
             }
         }
 
-        var actualResultValue = viewModel.result.value!!
-        if (actualResultValue.isNotEmpty()) {
-            actualResultValue = actualResultValue.substring(2, actualResultValue.length)
-        }
-
-        viewModel.addExpressionData(actualResultValue)
+        viewModel.addExpressionData(viewModel.getResultValue())
         updateExpressionAndResultData(command)
         viewModel.isCommandActive = true
     }
 
     private fun appendNumberValue(number: String){
-        removeExpressionData()
-        val regex = Regex("(\\d*0)\$")
+        viewModel.clearExpressionData()
+        val regex = Regex("\\W0\$")
+        val floatNumberRegex = Regex("\\d+(\\.)\\d*\$")
+
         val expression = viewModel.expression.value!!
 
-        if(regex.containsMatchIn(expression)){
-            viewModel.expression.value = expression.substring(0, expression.length - 1)
+        if((regex.containsMatchIn(expression) && !floatNumberRegex.containsMatchIn(expression))
+            || expression == "0"){
+            viewModel.removeLastExpressionSymbol()
         }
 
         updateExpressionAndResultData(number)
@@ -112,7 +120,7 @@ class DefaultKeyboardFragment : Fragment() {
     }
 
     private fun appendDotValue(dot: String){
-        if(!viewModel.isCommandActive && viewModel.result.value!!.isEmpty() && viewModel.expression.value!!.isNotEmpty()){
+        if(!viewModel.isCommandActive && viewModel.resultValue.value!!.isEmpty() && viewModel.expression.value!!.isNotEmpty()){
             val regex = Regex("\\d+(\\.)\\d*\$")
 
             if(!regex.containsMatchIn(viewModel.expression.value!!)){
@@ -123,7 +131,7 @@ class DefaultKeyboardFragment : Fragment() {
     }
 
     private fun appendZeroValue(zero: String){
-        removeExpressionData()
+        viewModel.clearExpressionData()
 
         val regex = Regex("([1-9]+)|(\\d+\\.)\$")
 
@@ -131,14 +139,10 @@ class DefaultKeyboardFragment : Fragment() {
             || viewModel.isCommandActive
             || viewModel.expression.value!!.isEmpty()){
             updateExpressionAndResultData(zero)
+            viewModel.isCommandActive = false
         }
     }
 
-    private fun removeExpressionData(){
-        if(viewModel.result.value!!.isNotEmpty()){
-            viewModel.expression.value = ""
-        }
-    }
     private fun updateExpressionAndResultData(data: String){
         viewModel.updateResultValue("")
         viewModel.addExpressionData(data)
@@ -173,7 +177,7 @@ class DefaultKeyboardFragment : Fragment() {
         binding.apply {
             buttonFragmentAdvanced.setOnClickListener{ switchToAdvancedKeyboard() }
             buttonResult.setOnClickListener { calculateResultValue() }
-            buttonRemove.setOnClickListener { removeLastSymbol() }
+            buttonRemove.setOnClickListener { viewModel.removeLastExpressionSymbol() }
             buttonClear.setOnClickListener { clearExpressionCommandAndResult() }
         }
     }

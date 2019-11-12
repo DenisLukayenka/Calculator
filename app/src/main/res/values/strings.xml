@@ -31,11 +31,12 @@
     <string name="inv_text">INV</string>
     <string name="deg_text">DEG</string>
     <string name="ln_text">ln</string>
-    <string name="log_text">log</string>
-    <string name="pi_text">Pi</string>
+    <string name="log_text">lg</string>
+    <string name="pi_text">π</string>
     <string name="exp_text">e</string>
     <string name="factorial_text">!</string>
     <string name="pow_text">^</string>
     <string name="radical_text">rad</string>
     <string name="backspace_description">Backspace button</string>
+    <string name="equal_text">=</string>
 </resources>

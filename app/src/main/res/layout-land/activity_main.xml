@@ -14,14 +14,14 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/liteBlue"
-            android:gravity="bottom|end"
+            android:gravity="right|top"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/fragmentsLayout"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/fragmentsLayout"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="@dimen/expressionHorizontalWeight"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_weight="@dimen/commandsVerticalWeight">
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/actualCommandText"
@@ -35,7 +35,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="bottom|end"
+                android:gravity="bottom|right"
                 android:orientation="horizontal">
 
                 <TextView
@@ -53,7 +53,6 @@
                 <TextView
                     android:id="@+id/commandResultText"
                     style="@style/default_text_style"
-                    android:layout_height="wrap_content"
                     android:paddingStart="5dp"
                     android:paddingTop="3dp"
                     android:paddingEnd="5dp"
@@ -61,6 +60,7 @@
                     android:singleLine="true"
                     android:text="Result value"
                     android:textSize="@dimen/resultCommandTextSize" />
+
             </LinearLayout>
         </LinearLayout>
 
@@ -71,9 +71,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearViewResults"
-            app:layout_constraintVertical_weight="@dimen/buttonsVerticalWeight">
+            app:layout_constraintHorizontal_weight="@dimen/buttonHorizontalWeight"
+            app:layout_constraintStart_toEndOf="@+id/linearViewResults"
+            app:layout_constraintTop_toTopOf="@+id/linearViewResults">
 
         </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

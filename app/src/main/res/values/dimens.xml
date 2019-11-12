@@ -3,6 +3,8 @@
     <dimen name="previewCommandTextSize">24sp</dimen>
     <dimen name="actualCommandTextSize">35sp</dimen>
     <dimen name="resultCommandTextSize">40sp</dimen>
-    <dimen name="buttonsVerticalWeight">6</dimen>
-    <dimen name="commandsVerticalWeight">3</dimen>
+    <dimen name="buttonsVerticalWeight">2</dimen>
+    <dimen name="commandsVerticalWeight">1</dimen>
+    <dimen name="buttonHorizontalWeight">4</dimen>
+    <dimen name="expressionHorizontalWeight">3</dimen>
 </resources>
