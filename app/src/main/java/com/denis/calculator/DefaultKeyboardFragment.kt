@@ -9,11 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
 import com.denis.calculator.databinding.DefaultKeyboardFragmentBinding
-import com.denis.calculator.functions.*
-import com.denis.calculator.operators.*
 import com.denis.calculator.services.ExpressionService
-import net.objecthunter.exp4j.ExpressionBuilder
-import java.util.*
 
 class DefaultKeyboardFragment : Fragment() {
 
@@ -39,18 +35,10 @@ class DefaultKeyboardFragment : Fragment() {
         expressionService = ExpressionService(viewModel)
 
         setNumericListeners()
-        setCommandListeners()
-        setAdvancedListeners()
+        setOperatorListeners()
+        setAdvancedButtonsListeners()
 
         return binding.root
-    }
-
-    private fun switchToAdvancedKeyboard(){
-        val advancedKeyboard = AdvancedKeyboardFragment()
-        val transaction = fragmentManager?.beginTransaction()
-        transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        transaction?.replace(R.id.fragmentsLayout, advancedKeyboard)
-        transaction?.commit()
     }
 
     private fun setNumericListeners(){
@@ -68,7 +56,7 @@ class DefaultKeyboardFragment : Fragment() {
             buttonDot.setOnClickListener { expressionService.addNumber(".") }
         }
     }
-    private fun setCommandListeners(){
+    private fun setOperatorListeners(){
         binding.apply {
             buttonMinus.setOnClickListener    { expressionService.addOperator("-") }
             buttonMultiply.setOnClickListener { expressionService.addOperator("*") }
@@ -77,13 +65,20 @@ class DefaultKeyboardFragment : Fragment() {
             buttonPlus.setOnClickListener     { expressionService.addOperator("+") }
         }
     }
-
-    private fun setAdvancedListeners(){
+    private fun setAdvancedButtonsListeners(){
         binding.apply {
-            buttonFragmentAdvanced.setOnClickListener{ switchToAdvancedKeyboard() }
-            buttonResult.setOnClickListener { expressionService.calculateResult() }
-            buttonRemove.setOnClickListener { expressionService.removeLastSymbol() }
-            buttonClear.setOnClickListener { expressionService.clearExpression() }
+            buttonFragmentAdvanced.setOnClickListener   { switchToAdvancedKeyboard() }
+            buttonResult.setOnClickListener             { expressionService.calculateFinalResult() }
+            buttonRemove.setOnClickListener             { expressionService.removeLastSymbol() }
+            buttonClear.setOnClickListener              { expressionService.clearExpression() }
         }
+    }
+
+    private fun switchToAdvancedKeyboard(){
+        val advancedKeyboard = AdvancedKeyboardFragment()
+        val transaction = fragmentManager?.beginTransaction()
+        transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        transaction?.replace(R.id.fragmentsLayout, advancedKeyboard)
+        transaction?.commit()
     }
 }
