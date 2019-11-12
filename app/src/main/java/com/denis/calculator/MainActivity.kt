@@ -12,13 +12,13 @@ import com.denis.calculator.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: SharedViewModel
+    private lateinit var viewModel: ExpressionResultViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        viewModel = ViewModelProviders.of(this)[SharedViewModel::class.java]
+        viewModel = ViewModelProviders.of(this)[ExpressionResultViewModel::class.java]
         viewModel.expression.observe(this, Observer<String> { item ->
             binding.actualCommandText.text = item
         })

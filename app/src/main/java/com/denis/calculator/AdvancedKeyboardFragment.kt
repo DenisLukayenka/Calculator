@@ -10,11 +10,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
 import com.denis.calculator.databinding.FragmentAdvancedKeyboardBinding
+import com.denis.calculator.services.ExpressionService
 
 class AdvancedKeyboardFragment : Fragment() {
 
     private lateinit var binding: FragmentAdvancedKeyboardBinding
-    private lateinit var viewModel: SharedViewModel
+    private lateinit var viewModel: ExpressionResultViewModel
+    private lateinit var expressionService: ExpressionService
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,10 +32,10 @@ class AdvancedKeyboardFragment : Fragment() {
         binding.buttonDefaultFragment.setOnClickListener { switchToDefaultKeyboard() }
 
         viewModel = activity?.run {
-            ViewModelProviders.of(this)[SharedViewModel::class.java]
+            ViewModelProviders.of(this)[ExpressionResultViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
 
-
+        expressionService = ExpressionService(viewModel)
         setFunctionsListeners()
         setConstantsListeners()
         setBracketListeners()
@@ -42,85 +44,31 @@ class AdvancedKeyboardFragment : Fragment() {
         return binding.root
     }
 
-    private fun functionListener(function: String){
-        viewModel.clearExpressionData()
-
-        if(viewModel.expression.value != "0" && !viewModel.isCommandActive){
-            return
-        }
-
-        if(viewModel.expression.value == "0"){
-            viewModel.expression.value = ""
-        }
-
-        updateExpressionAndResultData(function)
-        viewModel.bracketsToClose++
-
-    }
-    private fun constantListener(constant: String){
-        viewModel.clearExpressionData()
-        val regex = Regex("\\W0\$")
-        val floatNumberRegex = Regex("\\d+(\\.)\\d*\$")
-
-        val expression = viewModel.expression.value!!
-
-        if((regex.containsMatchIn(expression) && !floatNumberRegex.containsMatchIn(expression))
-            || expression == "0"){
-            viewModel.removeLastExpressionSymbol()
-        }
-
-        updateExpressionAndResultData(constant)
-        viewModel.isCommandActive = false
-    }
-    private fun rightBracketListener(rightBracket: String){
-        viewModel.clearExpressionData()
-
-        if(viewModel.bracketsToClose > 0){
-            updateExpressionAndResultData(rightBracket)
-            viewModel.bracketsToClose--
-        }
-    }
-
-    private fun operatorListener(operator: String){
-        viewModel.clearExpressionData()
-
-        if(viewModel.isCommandActive){
-            val expression = viewModel.expression.value!!
-            if(expression.isNotEmpty()){
-                viewModel.removeLastExpressionSymbol()
-            }
-        }
-
-        viewModel.addExpressionData(viewModel.getResultValue())
-        updateExpressionAndResultData(operator)
-        viewModel.isCommandActive = true
-    }
-
     private fun setFunctionsListeners(){
         binding.apply {
-            buttonSin.setOnClickListener { functionListener("sin(") }
-            buttonCos.setOnClickListener { functionListener("cos(") }
-            buttonTan.setOnClickListener { functionListener("tan(") }
-            buttonLn.setOnClickListener { functionListener("ln(") }
-            buttonLog.setOnClickListener { functionListener("lg(") }
+            buttonSin.setOnClickListener { expressionService.addFunction("sin(") }
+            buttonCos.setOnClickListener { expressionService.addFunction("cos(") }
+            buttonTan.setOnClickListener { expressionService.addFunction("tan(") }
+            buttonLn.setOnClickListener  { expressionService.addFunction("ln(") }
+            buttonLog.setOnClickListener { expressionService.addFunction("lg(") }
         }
     }
     private fun setConstantsListeners(){
         binding.apply {
-            buttonPi.setOnClickListener { constantListener("π") }
-            buttonExp.setOnClickListener { constantListener("e") }
+            buttonPi.setOnClickListener  { expressionService.addNumber("π") }
+            buttonExp.setOnClickListener { expressionService.addNumber("e") }
         }
     }
     private fun setBracketListeners(){
         binding.apply {
-            buttonLeftBracket.setOnClickListener { functionListener("(") }
-            buttonRightBracket.setOnClickListener { rightBracketListener(")") }
+            buttonLeftBracket.setOnClickListener  { expressionService.addFunction("(") }
+            buttonRightBracket.setOnClickListener { expressionService.addFunction(")") }
         }
     }
     private fun setOperatorListeners(){
         binding.apply {
-            buttonPow.setOnClickListener { operatorListener("^") }
-            buttonFactorial.setOnClickListener { operatorListener("!") }
+            buttonPow.setOnClickListener       { expressionService.addOperator("^") }
+            buttonFactorial.setOnClickListener { expressionService.addOperator("!") }
         }
     }
 
@@ -131,10 +79,5 @@ class AdvancedKeyboardFragment : Fragment() {
         transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         transaction?.replace(R.id.fragmentsLayout, defaultKeyboard)
         transaction?.commit()
-    }
-
-    private fun updateExpressionAndResultData(data: String){
-        viewModel.updateResultValue("")
-        viewModel.addExpressionData(data)
     }
 }

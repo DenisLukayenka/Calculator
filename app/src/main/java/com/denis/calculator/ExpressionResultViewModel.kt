@@ -3,7 +3,7 @@ package com.denis.calculator
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class SharedViewModel : ViewModel(){
+class ExpressionResultViewModel : ViewModel(){
     val expression: MutableLiveData<String> = MutableLiveData("0")
     val resultValue: MutableLiveData<String> = MutableLiveData("")
 
@@ -30,15 +30,5 @@ class SharedViewModel : ViewModel(){
 
     fun getResultValue(): String {
         return resultValue.value!!
-    }
-
-    fun removeLastExpressionSymbol(){
-        if(expression.value!!.isNotEmpty()){
-            expression.value = expression.value!!.substring(0, expression.value!!.length - 1)
-        } else {
-            expression.value = "Cannot remove last symbol"
-        }
-
-        resultValue.value = ""
     }
 }
