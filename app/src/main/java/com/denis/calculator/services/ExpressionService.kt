@@ -50,12 +50,16 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
     }
 
     fun addFunction(function: String){
-        if(function == ")"){
-            rightBracketListener(function)
-            return
+        if(viewModel.isResultFocused){
+
+            // Unfocus result field.
+            viewModel.updateResultValue("")
+            viewModel.clearExpressionData()
+            viewModel.isResultFocused = false
         }
 
-        if(viewModel.expression.value != "0" && !viewModel.isOperatorActive){
+        if(function == ")"){
+            rightBracketListener(function)
             return
         }
 
@@ -77,14 +81,23 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
         viewModel.isOperatorActive = false
         viewModel.bracketsToClose = 0
     }
-    fun removeLastSymbol(){
-        if(viewModel.expression.value!!.isNotEmpty()){
-            viewModel.expression.value = viewModel.expression.value!!.substring(0, viewModel.expression.value!!.length - 1)
+
+    private fun removeLastSymbol(){
+        val expression = viewModel.getExpressionValue()
+        if(!viewModel.isExpressionEmpty()){
+            viewModel.expression.value = expression.substring(0, expression.length - 1)
         } else {
             viewModel.expression.value = "Cannot remove last symbol"
         }
+    }
 
-        viewModel.expression.value = ""
+    fun backspaceSymbol(){
+        val expression = viewModel.getExpressionValue()
+        if(expression.length <= 1){
+            viewModel.expression.value = "0"
+        } else {
+            viewModel.expression.value = expression.substring(0, expression.length - 1)
+        }
     }
 
     private fun convertCalculateResultToString(result: Double): String{
@@ -156,7 +169,7 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
     }
     private fun addZeroNumber(zero: String){
         // Add zero only after integer number or in float part
-        val regex = Regex("([1-9]+)|(\\d+\\.)\$")
+        val regex = Regex("([1-9]+)|(\\d+\\.)|(\\w+\\()\$")
 
         // e.g.
         // 1. 15[0]  -- regex

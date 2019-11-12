@@ -1,7 +1,9 @@
 package com.denis.calculator
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
@@ -25,11 +27,27 @@ class MainActivity : AppCompatActivity() {
         viewModel.resultValue.observe(this, Observer<String> { item ->
             binding.commandResultText.text = item
         })
+        viewModel.isResultOnFocus.observe(this, Observer<Boolean> { item ->
+            onResultFocusChanged(item)
+        })
 
         val defaultKeyboard = DefaultKeyboardFragment()
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
 
         transaction.replace(R.id.fragmentsLayout, defaultKeyboard)
         transaction.commit()
+    }
+
+    private fun onResultFocusChanged(isResultOnFocus: Boolean){
+        if(isResultOnFocus){
+            binding.actualCommandText.setTextAppearance(R.style.expression_not_focused)
+            binding.commandResultText.setTextAppearance(R.style.result_on_focus)
+            binding.textViewEqualText.setTextAppearance(R.style.result_on_focus)
+
+        } else{
+            binding.actualCommandText.setTextAppearance(R.style.expression_on_focus)
+            binding.commandResultText.setTextAppearance(R.style.result_not_focused)
+            binding.textViewEqualText.setTextAppearance(R.style.result_not_focused)
+        }
     }
 }

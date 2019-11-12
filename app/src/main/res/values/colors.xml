@@ -5,4 +5,6 @@
     <color name="colorAccent">#F7C991</color>
     <color name="gray">#979695</color>
     <color name="liteBlue">#468EBD</color>
+    <color name="notFocusedView">#B0FFFFFF</color>
+    <color name="focusedView">#ffffffff</color>
 </resources>

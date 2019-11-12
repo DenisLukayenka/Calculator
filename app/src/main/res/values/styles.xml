@@ -38,4 +38,21 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="expression_on_focus" parent="default_text_style">
+        <item name="android:textColor">@color/focusedView</item>
+        <item name="android:textSize">@dimen/expressionFocusedTextSize</item>
+    </style>
+    <style name="expression_not_focused" parent="default_text_style">
+        <item name="android:textColor">@color/notFocusedView</item>
+        <item name="android:textSize">@dimen/expressionUnFocusedTextSize</item>
+    </style>
+
+    <style name="result_on_focus" parent="default_text_style">
+        <item name="android:textColor">@color/focusedView</item>
+        <item name="android:textSize">@dimen/resultFocusedTextSize</item>
+    </style>
+    <style name="result_not_focused" parent="default_text_style">
+        <item name="android:textColor">@color/notFocusedView</item>
+        <item name="android:textSize">@dimen/resultUnFocusedTextSize</item>
+    </style>
 </resources>

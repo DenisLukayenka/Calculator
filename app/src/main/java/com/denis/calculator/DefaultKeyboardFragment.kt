@@ -69,7 +69,7 @@ class DefaultKeyboardFragment : Fragment() {
         binding.apply {
             buttonFragmentAdvanced.setOnClickListener   { switchToAdvancedKeyboard() }
             buttonResult.setOnClickListener             { expressionService.calculateFinalResult() }
-            buttonRemove.setOnClickListener             { expressionService.removeLastSymbol() }
+            buttonRemove.setOnClickListener             { expressionService.backspaceSymbol() }
             buttonClear.setOnClickListener              { expressionService.clearExpression() }
         }
     }

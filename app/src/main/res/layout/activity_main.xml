@@ -25,11 +25,10 @@
 
             <TextView
                 android:id="@+id/actualCommandText"
-                style="@style/default_text_style"
+                style="@style/expression_not_focused"
                 android:singleLine="true"
                 android:text="Expression"
                 android:textColor="#B0FFFFFF"
-                android:textSize="@dimen/actualCommandTextSize"
                 app:autoSizeTextType="uniform" />
 
             <LinearLayout
@@ -40,27 +39,25 @@
 
                 <TextView
                     android:id="@+id/textView_equalText"
-                    style="@style/default_text_style"
+                    style="@style/result_on_focus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="0dp"
                     android:layout_marginEnd="0dp"
                     android:paddingStart="0dp"
                     android:paddingEnd="0dp"
-                    android:text="@string/equal_text"
-                    android:textSize="@dimen/resultCommandTextSize" />
+                    android:text="@string/equal_text" />
 
                 <TextView
                     android:id="@+id/commandResultText"
-                    style="@style/default_text_style"
+                    style="@style/result_on_focus"
                     android:layout_height="wrap_content"
                     android:paddingStart="5dp"
                     android:paddingTop="3dp"
                     android:paddingEnd="5dp"
                     android:paddingBottom="3dp"
                     android:singleLine="true"
-                    android:text="Result value"
-                    android:textSize="@dimen/resultCommandTextSize" />
+                    android:text="Result value" />
             </LinearLayout>
         </LinearLayout>
 

@@ -6,9 +6,15 @@ import androidx.lifecycle.ViewModel
 class ExpressionResultViewModel : ViewModel(){
     val expression: MutableLiveData<String> = MutableLiveData("0")
     val resultValue: MutableLiveData<String> = MutableLiveData("0")
+    val isResultOnFocus: MutableLiveData<Boolean> = MutableLiveData(false)
+
+    var isResultFocused: Boolean
+        get() = isResultOnFocus.value!!
+        set(value) {
+            isResultOnFocus.value = value
+        }
 
     var isOperatorActive: Boolean = false
-    var isResultFocused: Boolean = false
     var bracketsToClose: Int = 0
 
     fun addExpressionData(data: String){
@@ -33,9 +39,5 @@ class ExpressionResultViewModel : ViewModel(){
 
     fun isExpressionEmpty(): Boolean{
         return expression.value!!.isEmpty()
-    }
-
-    fun isResultValueEmpty(): Boolean{
-        return resultValue.value!!.isEmpty()
     }
 }
