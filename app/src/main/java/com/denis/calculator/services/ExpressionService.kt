@@ -54,8 +54,6 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
             return
         }
 
-        viewModel.clearExpressionData()
-
         if(viewModel.expression.value != "0" && !viewModel.isOperatorActive){
             return
         }
@@ -64,7 +62,11 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
             viewModel.expression.value = ""
         }
 
-        updateExpressionAndResultData(function)
+        if(function == "("){
+            viewModel.bracketsToClose++
+        }
+
+        viewModel.addExpressionData(function)
         viewModel.bracketsToClose++
     }
 
@@ -87,10 +89,11 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
     fun calculateResult(){
         try {
             var actualExpression = viewModel.expression.value!!.toLowerCase(Locale.ENGLISH)
+            var countOfBrackets = viewModel.bracketsToClose
 
-            while (viewModel.bracketsToClose > 0){
+            while (countOfBrackets > 0){
                 actualExpression += ")"
-                viewModel.bracketsToClose--
+                countOfBrackets--
             }
 
             val expression = ExpressionBuilder(actualExpression)
@@ -110,7 +113,7 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
                 viewModel.updateResultValue(resultText)
             }
 
-            viewModel.expression.value = actualExpression
+            //viewModel.expression.value = actualExpression
 
         } catch (ex: Exception) {
             viewModel.updateResultValue("Error")
@@ -160,18 +163,9 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
         }
     }
 
-    private fun updateExpressionAndResultData(data: String){
-        if(viewModel.isResultFocused){
-            viewModel.updateResultValue("")
-        }
-
-        viewModel.addExpressionData(data)
-    }
     private fun rightBracketListener(rightBracket: String){
-        viewModel.clearExpressionData()
-
         if(viewModel.bracketsToClose > 0){
-            updateExpressionAndResultData(rightBracket)
+            viewModel.addExpressionData(rightBracket)
             viewModel.bracketsToClose--
         }
     }
