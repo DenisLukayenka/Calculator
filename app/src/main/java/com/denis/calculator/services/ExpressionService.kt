@@ -11,38 +11,36 @@ import java.util.*
 class ExpressionService(private val viewModel: ExpressionResultViewModel){
 
     fun addNumber(number: String){
+        if(viewModel.isResultFocused){
+
+            // Unfocus result field.
+            viewModel.updateResultValue("")
+            viewModel.clearExpressionData()
+            viewModel.isResultFocused = false
+        }
+
+        // Move command here cause dot value don't reset operator to false
+        viewModel.isOperatorActive = false
+
         when(number){
             "0" -> addZeroNumber(number)
             "." -> addDotValue(number)
-
-            else -> {
-                viewModel.clearExpressionData()
-                val regex = Regex("\\W0\$")
-                val floatNumberRegex = Regex("\\d+(\\.)\\d*\$")
-
-                val expression = viewModel.expression.value!!
-
-                if((regex.containsMatchIn(expression) && !floatNumberRegex.containsMatchIn(expression))
-                    || expression == "0"){
-                    removeLastSymbol()
-                }
-
-                updateExpressionAndResultData(number)
-                viewModel.isCommandActive = false
-            }
+            else -> addDefaultNumber(number)
         }
+
+        tryCalculateResult()
     }
 
     fun addOperator(operator: String){
         viewModel.clearExpressionData()
 
-        if(viewModel.isCommandActive){
+        if(viewModel.isOperatorActive){
             removeLastSymbol()
         }
 
         viewModel.addExpressionData(viewModel.getResultValue())
         updateExpressionAndResultData(operator)
-        viewModel.isCommandActive = true
+        viewModel.isOperatorActive = true
     }
 
     fun addFunction(function: String){
@@ -53,7 +51,7 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
 
         viewModel.clearExpressionData()
 
-        if(viewModel.expression.value != "0" && !viewModel.isCommandActive){
+        if(viewModel.expression.value != "0" && !viewModel.isOperatorActive){
             return
         }
 
@@ -66,9 +64,9 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
     }
 
     fun clearExpression(){
-        viewModel.resultValue.value = ""
+        viewModel.resultValue.value = "0"
         viewModel.expression.value = "0"
-        viewModel.isCommandActive = false
+        viewModel.isOperatorActive = false
         viewModel.bracketsToClose = 0
     }
     fun removeLastSymbol(){
@@ -112,32 +110,56 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
         } catch (ex: Exception) {
             viewModel.updateResultValue("Error")
         }
+
+        viewModel.isResultFocused = true
     }
 
+    private fun tryCalculateResult(){
+        calculateResult()
+        viewModel.isResultFocused = false
+    }
+
+    private fun addDefaultNumber(number: String){
+        // Switch 'zero' to new digit if it's not the float number
+        // e.g. actual expression: 15+0, input number: 5 --> new expression: 15+5
+        if(checkToRemoveLastZeroSymbol()){
+            removeLastSymbol()
+        }
+
+        viewModel.addExpressionData(number)
+    }
     private fun addZeroNumber(zero: String){
+        // Add zero only after integer number or in float part
         val regex = Regex("([1-9]+)|(\\d+\\.)\$")
 
+        // e.g.
+        // 1. 15[0]  -- regex
+        // 2. 15.[0] -- regex
+        // 3. 15+[0] -- isOperatorActive
         if(regex.containsMatchIn(viewModel.expression.value!!)
-            || viewModel.isCommandActive
-            || viewModel.expression.value!!.isEmpty()){
+            || viewModel.isOperatorActive){
 
-            viewModel.clearExpressionData()
-            updateExpressionAndResultData(zero)
-            viewModel.isCommandActive = false
+            viewModel.addExpressionData(zero)
         }
     }
     private fun addDotValue(dot: String){
-        if(!viewModel.isCommandActive && viewModel.resultValue.value!!.isEmpty() && viewModel.expression.value!!.isNotEmpty()){
+        if(!viewModel.isOperatorActive
+            && !viewModel.isExpressionEmpty()){
+
             val regex = Regex("\\d+(\\.)\\d*\$")
 
-            if(!regex.containsMatchIn(viewModel.expression.value!!)){
-                updateExpressionAndResultData(".")
-                viewModel.isCommandActive = true
+            if(!regex.containsMatchIn(viewModel.getExpressionValue())){
+                viewModel.addExpressionData(dot)
+                viewModel.isOperatorActive = true
             }
         }
     }
+
     private fun updateExpressionAndResultData(data: String){
-        viewModel.updateResultValue("")
+        if(viewModel.isResultFocused){
+            viewModel.updateResultValue("")
+        }
+
         viewModel.addExpressionData(data)
     }
     private fun rightBracketListener(rightBracket: String){
@@ -147,5 +169,18 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
             updateExpressionAndResultData(rightBracket)
             viewModel.bracketsToClose--
         }
+    }
+
+    private fun checkToRemoveLastZeroSymbol(): Boolean {
+        val regex = Regex("\\W0\$")
+        val floatNumberRegex = Regex("\\d+(\\.)\\d*\$")
+        val expression = viewModel.expression.value!!
+
+        if((regex.containsMatchIn(expression) && !floatNumberRegex.containsMatchIn(expression))
+            || expression == "0"){
+            return true
+        }
+
+        return false
     }
 }
