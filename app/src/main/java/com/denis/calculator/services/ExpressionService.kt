@@ -9,6 +9,7 @@ import net.objecthunter.exp4j.ExpressionBuilder
 import java.util.*
 
 class ExpressionService(private val viewModel: ExpressionResultViewModel){
+    private val maxDoubleValueLength: Int = 10
 
     fun addNumber(number: String){
         if(viewModel.isResultFocused){
@@ -28,7 +29,7 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
             else -> addDefaultNumber(number)
         }
 
-        tryCalculateResult()
+        tryShowCalculatedResult()
     }
 
     fun addOperator(operator: String){
@@ -86,45 +87,62 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
         viewModel.expression.value = ""
     }
 
-    fun calculateResult(){
-        try {
-            var actualExpression = viewModel.expression.value!!.toLowerCase(Locale.ENGLISH)
-            var countOfBrackets = viewModel.bracketsToClose
+    private fun convertCalculateResultToString(result: Double): String{
+        val longResult = result.toLong()
 
-            while (countOfBrackets > 0){
-                actualExpression += ")"
-                countOfBrackets--
+        return if(longResult.toDouble() == result){
+            longResult.toString()
+        }else{
+            var resultText = result.toString()
+            if(resultText.length > maxDoubleValueLength){
+                resultText = resultText.substring(0, maxDoubleValueLength)
             }
+            resultText
+        }
+    }
+    private fun prepareExpressionToCalculate(expression: String, bracketsCount: Int): String{
+        var actualExpression = expression.toLowerCase(Locale.ENGLISH)
+        var bracketsToAdd = bracketsCount
 
+        while (bracketsToAdd > 0){
+            actualExpression += ")"
+            bracketsToAdd--
+        }
+
+        return actualExpression
+    }
+
+    private fun calculateResult(expr: String, brackets: Int): String{
+        return try {
+            val actualExpression = prepareExpressionToCalculate(expr, brackets)
             val expression = ExpressionBuilder(actualExpression)
                 .functions(FuncLg(), FuncLn())
                 .operator(OperatorFactorial(), DegreeOperator())
                 .build()
+
             val result = expression.evaluate()
-            val longResult = result.toLong()
 
-            if(longResult.toDouble() == result){
-                viewModel.updateResultValue(longResult.toString())
-            } else {
-                var resultText = result.toString()
-                if(resultText.length > 8){
-                    resultText = resultText.substring(0, 8)
-                }
-                viewModel.updateResultValue(resultText)
-            }
-
-            //viewModel.expression.value = actualExpression
+            convertCalculateResultToString(result)
 
         } catch (ex: Exception) {
-            viewModel.updateResultValue("Error")
+            "Error"
         }
-
-        viewModel.isResultFocused = true
     }
 
-    private fun tryCalculateResult(){
-        calculateResult()
-        viewModel.isResultFocused = false
+    private fun tryShowCalculatedResult(){
+        val calculateResultValue = calculateResult(viewModel.getExpressionValue(), viewModel.bracketsToClose)
+        viewModel.updateResultValue(calculateResultValue)
+    }
+
+    fun calculateFinalResult(){
+        val preparedExpression = prepareExpressionToCalculate(viewModel.getExpressionValue(), viewModel.bracketsToClose)
+        val calculateResultValue = calculateResult(preparedExpression, 0)
+
+        viewModel.updateResultValue(calculateResultValue)
+        viewModel.clearExpressionData()
+        viewModel.addExpressionData(preparedExpression)
+
+        viewModel.isResultFocused = true
     }
 
     private fun addDefaultNumber(number: String){

@@ -68,7 +68,7 @@ class DefaultKeyboardFragment : Fragment() {
     private fun setAdvancedButtonsListeners(){
         binding.apply {
             buttonFragmentAdvanced.setOnClickListener   { switchToAdvancedKeyboard() }
-            buttonResult.setOnClickListener             { expressionService.calculateResult() }
+            buttonResult.setOnClickListener             { expressionService.calculateFinalResult() }
             buttonRemove.setOnClickListener             { expressionService.removeLastSymbol() }
             buttonClear.setOnClickListener              { expressionService.clearExpression() }
         }
