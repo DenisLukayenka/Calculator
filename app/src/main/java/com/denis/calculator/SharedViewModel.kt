@@ -11,7 +11,11 @@ class SharedViewModel : ViewModel(){
     var bracketsToClose: Int = 0
 
     fun addExpressionData(data: String){
-        expression.value += data
+        if(expression.value == "0"){
+            expression.value = data
+        } else {
+            expression.value += data
+        }
     }
 
     fun updateResultValue(data: String){

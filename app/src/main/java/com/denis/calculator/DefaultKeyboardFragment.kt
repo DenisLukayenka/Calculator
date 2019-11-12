@@ -92,10 +92,7 @@ class DefaultKeyboardFragment : Fragment() {
         viewModel.clearExpressionData()
 
         if(viewModel.isCommandActive){
-            val expression = viewModel.expression.value!!
-            if(expression.isNotEmpty()){
-                viewModel.removeLastExpressionSymbol()
-            }
+            viewModel.removeLastExpressionSymbol()
         }
 
         viewModel.addExpressionData(viewModel.getResultValue())
