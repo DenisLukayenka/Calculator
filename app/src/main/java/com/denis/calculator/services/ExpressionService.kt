@@ -32,14 +32,19 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
     }
 
     fun addOperator(operator: String){
-        viewModel.clearExpressionData()
-
+        // Switch to new operator
+        // TODO specific for '-' operator
         if(viewModel.isOperatorActive){
             removeLastSymbol()
         }
 
-        viewModel.addExpressionData(viewModel.getResultValue())
-        updateExpressionAndResultData(operator)
+        if(viewModel.isResultFocused){
+            viewModel.clearExpressionData()
+            viewModel.addExpressionData(viewModel.getResultValue())
+            viewModel.isResultFocused = false
+        }
+
+        viewModel.addExpressionData(operator)
         viewModel.isOperatorActive = true
     }
 

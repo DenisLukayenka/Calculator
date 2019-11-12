@@ -20,7 +20,7 @@ class ExpressionResultViewModel : ViewModel(){
     }
 
     fun clearExpressionData(){
-        expression.value = "0"
+        expression.value = ""
     }
 
     fun getResultValue(): String {
