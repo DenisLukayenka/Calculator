@@ -7,4 +7,5 @@
     <color name="liteBlue">#468EBD</color>
     <color name="notFocusedView">#B0FFFFFF</color>
     <color name="focusedView">#ffffffff</color>
+    <color name="liteGray">#D5D5D5</color>
 </resources>
