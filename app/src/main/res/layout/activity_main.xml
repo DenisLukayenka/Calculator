@@ -61,7 +61,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <FrameLayout
+        <androidx.viewpager.widget.ViewPager
             android:id="@+id/fragmentsLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -72,6 +72,6 @@
             app:layout_constraintTop_toBottomOf="@+id/linearViewResults"
             app:layout_constraintVertical_weight="@dimen/buttonsVerticalWeight">
 
-        </FrameLayout>
+        </androidx.viewpager.widget.ViewPager>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

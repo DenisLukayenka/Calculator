@@ -1,13 +1,13 @@
 package com.denis.calculator
 
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
+import com.denis.calculator.adapters.ViewPagerAdapter
 import com.denis.calculator.databinding.ActivityMainBinding
 
 
@@ -16,26 +16,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: ExpressionResultViewModel
 
+    private lateinit var viewPager: ViewPager
+    private lateinit var pagerAdapter: ViewPagerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        viewModel = ViewModelProviders.of(this)[ExpressionResultViewModel::class.java]
-        viewModel.expression.observe(this, Observer<String> { item ->
-            binding.actualCommandText.text = item
-        })
-        viewModel.resultValue.observe(this, Observer<String> { item ->
-            binding.commandResultText.text = item
-        })
-        viewModel.isResultOnFocus.observe(this, Observer<Boolean> { item ->
-            onResultFocusChanged(item)
-        })
+        initializeViewModel()
 
-        val defaultKeyboard = DefaultKeyboardFragment()
-        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
-
-        transaction.replace(R.id.fragmentsLayout, defaultKeyboard)
-        transaction.commit()
+        viewPager = binding.fragmentsLayout
+        pagerAdapter = ViewPagerAdapter(supportFragmentManager)
+        viewPager.adapter = pagerAdapter
     }
 
     private fun onResultFocusChanged(isResultOnFocus: Boolean){
@@ -49,5 +41,18 @@ class MainActivity : AppCompatActivity() {
             binding.commandResultText.setTextAppearance(R.style.result_not_focused)
             binding.textViewEqualText.setTextAppearance(R.style.result_not_focused)
         }
+    }
+
+    private fun initializeViewModel(){
+        viewModel = ViewModelProviders.of(this)[ExpressionResultViewModel::class.java]
+        viewModel.expression.observe(this, Observer<String> { item ->
+            binding.actualCommandText.text = item
+        })
+        viewModel.resultValue.observe(this, Observer<String> { item ->
+            binding.commandResultText.text = item
+        })
+        viewModel.isResultOnFocus.observe(this, Observer<Boolean> { item ->
+            onResultFocusChanged(item)
+        })
     }
 }

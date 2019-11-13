@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
 import com.denis.calculator.databinding.DefaultKeyboardFragmentBinding
 import com.denis.calculator.services.ExpressionService
 
@@ -25,15 +25,13 @@ class DefaultKeyboardFragment : Fragment() {
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.default_keyboard_fragment,
-            container,
-            false)
+            container, false)
 
         viewModel = activity?.run {
             ViewModelProviders.of(this)[ExpressionResultViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
 
         expressionService = ExpressionService(viewModel)
-
         setNumericListeners()
         setOperatorListeners()
         setAdvancedButtonsListeners()
@@ -75,10 +73,19 @@ class DefaultKeyboardFragment : Fragment() {
     }
 
     private fun switchToAdvancedKeyboard(){
-        val advancedKeyboard = AdvancedKeyboardFragment()
-        val transaction = fragmentManager?.beginTransaction()
-        transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        transaction?.replace(R.id.fragmentsLayout, advancedKeyboard)
-        transaction?.commit()
+        activity!!.findViewById<ViewPager>(R.id.fragmentsLayout).setCurrentItem(1, true)
+    }
+
+    companion object {
+        // Method for creating new instances of the fragment
+        fun newInstance(): DefaultKeyboardFragment {
+            // Store the movie data in a Bundle object
+            val args = Bundle()
+           // args.putString(MovieHelper.KEY_TITLE, movie.title)
+
+            val fragment = DefaultKeyboardFragment()
+            fragment.arguments = args
+            return fragment
+        }
     }
 }

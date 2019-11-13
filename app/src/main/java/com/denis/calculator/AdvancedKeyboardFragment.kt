@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
 import com.denis.calculator.databinding.FragmentAdvancedKeyboardBinding
 import com.denis.calculator.services.ExpressionService
 
@@ -44,6 +45,7 @@ class AdvancedKeyboardFragment : Fragment() {
         return binding.root
     }
 
+
     private fun setFunctionsListeners(){
         binding.apply {
             buttonSin.setOnClickListener { expressionService.addFunction("sin(") }
@@ -73,11 +75,23 @@ class AdvancedKeyboardFragment : Fragment() {
     }
 
     private fun switchToDefaultKeyboard(){
-        val defaultKeyboard = DefaultKeyboardFragment()
-        val transaction = fragmentManager?.beginTransaction()
+        activity!!.findViewById<ViewPager>(R.id.fragmentsLayout).setCurrentItem(0, true)
+    }
 
-        transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        transaction?.replace(R.id.fragmentsLayout, defaultKeyboard)
-        transaction?.commit()
+    companion object {
+
+        // Method for creating new instances of the fragment
+        fun newInstance(): AdvancedKeyboardFragment {
+
+            // Store the movie data in a Bundle object
+            val args = Bundle()
+            // args.putString(MovieHelper.KEY_TITLE, movie.title)
+
+            // Create a new MovieFragment and set the Bundle as the arguments
+            // to be retrieved and displayed when the view is created
+            val fragment = AdvancedKeyboardFragment()
+            fragment.arguments = args
+            return fragment
+        }
     }
 }

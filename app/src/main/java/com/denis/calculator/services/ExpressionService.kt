@@ -155,6 +155,7 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
         viewModel.clearExpressionData()
         viewModel.addExpressionData(preparedExpression)
 
+        viewModel.bracketsToClose = 0
         viewModel.isResultFocused = true
     }
 
