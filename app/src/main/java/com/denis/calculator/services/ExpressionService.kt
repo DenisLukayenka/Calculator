@@ -10,14 +10,12 @@ import java.util.*
 
 class ExpressionService(private val viewModel: ExpressionResultViewModel){
     private val maxDoubleValueLength: Int = 10
+    private val operators = "%/*-+^!"
+    private val regexFunctions =  Regex("(sin\\()|(cos\\()|(tan\\()|(ln\\()|(lg\\()\$")
 
     fun addNumber(number: String){
         if(viewModel.isResultFocused){
-
-            // Unfocus result field.
-            viewModel.updateResultValue("")
-            viewModel.clearExpressionData()
-            viewModel.isResultFocused = false
+            resetFocusedResult("0")
         }
 
         // Move command here cause dot value don't reset operator to false
@@ -36,13 +34,10 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
         // Switch to new operator
         // TODO specific for '-' operator
         if(viewModel.isOperatorActive){
-            removeLastSymbol()
+            removeLastSymbol(viewModel.getExpressionValue())
         }
-
         if(viewModel.isResultFocused){
-            viewModel.clearExpressionData()
-            viewModel.addExpressionData(viewModel.getResultValue())
-            viewModel.isResultFocused = false
+            resetFocusedResult(viewModel.getResultValue())
         }
 
         viewModel.addExpressionData(operator)
@@ -51,11 +46,7 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
 
     fun addFunction(function: String){
         if(viewModel.isResultFocused){
-
-            // Unfocus result field.
-            viewModel.updateResultValue("")
-            viewModel.clearExpressionData()
-            viewModel.isResultFocused = false
+            resetFocusedResult("0")
         }
 
         if(function == ")"){
@@ -67,12 +58,9 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
             viewModel.expression.value = ""
         }
 
-        if(function == "("){
-            viewModel.bracketsToClose++
-        }
-
         viewModel.addExpressionData(function)
         viewModel.bracketsToClose++
+        viewModel.isOperatorActive = false
     }
 
     fun clearExpression(){
@@ -82,22 +70,50 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
         viewModel.bracketsToClose = 0
     }
 
-    private fun removeLastSymbol(){
-        val expression = viewModel.getExpressionValue()
-        if(!viewModel.isExpressionEmpty()){
-            viewModel.expression.value = expression.substring(0, expression.length - 1)
-        } else {
-            viewModel.expression.value = "Cannot remove last symbol"
-        }
+    private fun removeLastSymbol(expression: String){
+        viewModel.expression.value = expression.substring(0, expression.length - 1)
     }
 
     fun backspaceSymbol(){
+        viewModel.isResultFocused = false
+
         val expression = viewModel.getExpressionValue()
-        if(expression.length <= 1){
-            viewModel.expression.value = "0"
+        val lastSymbol = expression.last()
+
+        if (regexFunctions.containsMatchIn(expression)){
+            viewModel.clearExpressionData()
+
+            val newExpression = regexFunctions.replaceFirst(expression, "")
+            viewModel.addExpressionData(newExpression)
+            viewModel.bracketsToClose--
         } else {
-            viewModel.expression.value = expression.substring(0, expression.length - 1)
+            when (lastSymbol) {
+                in operators -> viewModel.isOperatorActive = false
+                ')' -> viewModel.bracketsToClose++
+                '(' -> viewModel.bracketsToClose--
+            }
         }
+
+        removeLastSymbol(expression)
+        val newExpression = viewModel.getExpressionValue()
+
+        if(newExpression.isEmpty()){
+            viewModel.clearExpressionData()
+            viewModel.addExpressionData("0")
+        } else if(newExpression.last() in operators){
+            viewModel.isOperatorActive = true
+        }
+
+        tryShowCalculatedResult()
+    }
+
+    private fun resetFocusedResult(expressionData: String){
+        viewModel.updateResultValue("")
+        viewModel.clearExpressionData()
+        viewModel.addExpressionData(expressionData)
+        viewModel.bracketsToClose = 0
+        viewModel.isOperatorActive = false
+        viewModel.isResultFocused = false
     }
 
     private fun convertCalculateResultToString(result: Double): String{
@@ -120,6 +136,11 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
         while (bracketsToAdd > 0){
             actualExpression += ")"
             bracketsToAdd--
+        }
+
+        val lastSymbol = expression.last()
+        if(lastSymbol in operators){
+            actualExpression = actualExpression.substring(0, actualExpression.length - 1)
         }
 
         return actualExpression
@@ -163,7 +184,7 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
         // Switch 'zero' to new digit if it's not the float number
         // e.g. actual expression: 15+0, input number: 5 --> new expression: 15+5
         if(checkToRemoveLastZeroSymbol()){
-            removeLastSymbol()
+            removeLastSymbol(viewModel.getExpressionValue())
         }
 
         viewModel.addExpressionData(number)
@@ -199,6 +220,7 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
         if(viewModel.bracketsToClose > 0){
             viewModel.addExpressionData(rightBracket)
             viewModel.bracketsToClose--
+            viewModel.isOperatorActive = false
         }
     }
 
