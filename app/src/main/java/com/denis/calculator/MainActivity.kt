@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             binding.commandResultText.setTextAppearance(R.style.result_on_focus)
             binding.textViewEqualText.setTextAppearance(R.style.result_on_focus)
 
-        } else{
+        } else {
             binding.actualCommandText.setTextAppearance(R.style.expression_on_focus)
             binding.commandResultText.setTextAppearance(R.style.result_not_focused)
             binding.textViewEqualText.setTextAppearance(R.style.result_not_focused)

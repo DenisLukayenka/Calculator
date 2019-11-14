@@ -4,6 +4,7 @@ import com.denis.calculator.ExpressionResultViewModel
 import com.denis.calculator.functions.*
 import com.denis.calculator.operators.*
 import net.objecthunter.exp4j.ExpressionBuilder
+import net.objecthunter.exp4j.function.Function
 import java.util.*
 
 class ExpressionService(private val viewModel: ExpressionResultViewModel){
@@ -71,10 +72,6 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
         viewModel.bracketsToClose = 0
     }
 
-    private fun removeLastSymbol(expression: String){
-        viewModel.expression.value = expression.substring(0, expression.length - 1)
-    }
-
     fun backspaceSymbol(){
         viewModel.isResultFocused = false
 
@@ -108,13 +105,60 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
         tryShowCalculatedResult()
     }
 
-    private fun resetFocusedResult(expressionData: String){
-        viewModel.updateResultValue("")
+    fun calculateFinalResult(){
+        val preparedExpression = prepareExpressionToCalculate(viewModel.getExpressionValue(), viewModel.bracketsToClose)
+        val calculateResultValue = calculateResult(preparedExpression, 0)
+
+        viewModel.updateResultValue(calculateResultValue)
         viewModel.clearExpressionData()
-        viewModel.addExpressionData(expressionData)
+        viewModel.addExpressionData(preparedExpression)
+
         viewModel.bracketsToClose = 0
-        viewModel.isOperatorActive = false
-        viewModel.isResultFocused = false
+        viewModel.isResultFocused = true
+    }
+
+    private fun calculateResult(expr: String, brackets: Int): String{
+        return try {
+            var actualExpression = prepareExpressionToCalculate(expr, brackets)
+            actualExpression = replaceToCorrectFunctions(actualExpression)
+
+            val expression = createExpressionBuilder(actualExpression).build()
+
+            val result = expression.evaluate()
+
+            convertCalculateResultToString(result)
+
+        } catch (ex: Exception) {
+            "Error"
+        }
+    }
+
+    private fun tryShowCalculatedResult(){
+        val calculateResultValue = calculateResult(viewModel.getExpressionValue(), viewModel.bracketsToClose)
+        viewModel.updateResultValue(calculateResultValue)
+    }
+
+    private fun createExpressionBuilder(expression: String): ExpressionBuilder {
+        val operators = listOf(
+            OperatorFactorial(),
+            DegreeOperator())
+        val functions = mutableListOf(
+            FuncLn(),
+            FuncLg())
+
+        if(viewModel.isDeg){
+            functions.apply {
+                add(FuncSin())
+                add(FuncCos())
+                add(FuncTan())
+            }
+        }
+
+        val expressionBuilder = ExpressionBuilder(expression)
+        expressionBuilder.functions(functions)
+        expressionBuilder.operator(operators)
+
+        return expressionBuilder
     }
 
     private fun convertCalculateResultToString(result: Double): String{
@@ -122,7 +166,7 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
 
         return if(longResult.toDouble() == result){
             longResult.toString()
-        }else{
+        } else {
             var resultText = result.toString()
             if(resultText.length > maxDoubleValueLength){
                 resultText = resultText.substring(0, maxDoubleValueLength)
@@ -146,7 +190,7 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
 
         return actualExpression
     }
-    private fun replaceToCorrectFunction(expression: String): String{
+    private fun replaceToCorrectFunctions(expression: String): String{
         var actualExpression = expression
 
         for (entry in replaceFunctions){
@@ -156,40 +200,13 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
         return actualExpression
     }
 
-    private fun calculateResult(expr: String, brackets: Int): String{
-        return try {
-            var actualExpression = prepareExpressionToCalculate(expr, brackets)
-            actualExpression = replaceToCorrectFunction(actualExpression)
-
-            val expression = ExpressionBuilder(actualExpression)
-                .functions(FuncLg(), FuncLn())
-                .operator(OperatorFactorial(), DegreeOperator())
-                .build()
-
-            val result = expression.evaluate()
-
-            convertCalculateResultToString(result)
-
-        } catch (ex: Exception) {
-            "Error"
-        }
-    }
-
-    private fun tryShowCalculatedResult(){
-        val calculateResultValue = calculateResult(viewModel.getExpressionValue(), viewModel.bracketsToClose)
-        viewModel.updateResultValue(calculateResultValue)
-    }
-
-    fun calculateFinalResult(){
-        val preparedExpression = prepareExpressionToCalculate(viewModel.getExpressionValue(), viewModel.bracketsToClose)
-        val calculateResultValue = calculateResult(preparedExpression, 0)
-
-        viewModel.updateResultValue(calculateResultValue)
+    private fun resetFocusedResult(expressionData: String){
+        viewModel.updateResultValue("")
         viewModel.clearExpressionData()
-        viewModel.addExpressionData(preparedExpression)
-
+        viewModel.addExpressionData(expressionData)
         viewModel.bracketsToClose = 0
-        viewModel.isResultFocused = true
+        viewModel.isOperatorActive = false
+        viewModel.isResultFocused = false
     }
 
     private fun addDefaultNumber(number: String){
@@ -247,5 +264,18 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
         }
 
         return false
+    }
+    private fun removeLastSymbol(expression: String){
+        viewModel.expression.value = expression.substring(0, expression.length - 1)
+    }
+
+    fun onSelectedDeg(){
+        viewModel.isDeg = true
+        tryShowCalculatedResult()
+    }
+
+    fun onSelectedRad(){
+        viewModel.isDeg = false
+        tryShowCalculatedResult()
     }
 }

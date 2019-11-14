@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.denis.calculator.databinding.FragmentAdvancedKeyboardBinding
@@ -30,17 +32,25 @@ class AdvancedKeyboardFragment : Fragment() {
             container,
             false
         )
-        binding.buttonDefaultFragment.setOnClickListener { switchToDefaultKeyboard() }
 
         viewModel = activity?.run {
             ViewModelProviders.of(this)[ExpressionResultViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
+        viewModel.isDegSelected.observe(this, Observer<Boolean> { item ->
+            if(item){
+                activateButton(binding.buttonDeg)
+                deactivateButton(binding.buttonRadical)
+            } else {
+                activateButton(binding.buttonRadical)
+                deactivateButton(binding.buttonDeg)
+            }
+        })
 
         expressionService = ExpressionService(viewModel)
         setFunctionsListeners()
         setConstantsListeners()
-        setBracketListeners()
         setOperatorListeners()
+        setActionListeners()
 
         return binding.root
     }
@@ -54,6 +64,9 @@ class AdvancedKeyboardFragment : Fragment() {
             buttonLn.setOnClickListener  { expressionService.addFunction("ln(") }
             buttonLog.setOnClickListener { expressionService.addFunction("lg(") }
             buttonSqrt.setOnClickListener{ expressionService.addFunction("√(") }
+
+            buttonLeftBracket.setOnClickListener  { expressionService.addFunction("(") }
+            buttonRightBracket.setOnClickListener { expressionService.addFunction(")") }
         }
     }
     private fun setConstantsListeners(){
@@ -62,21 +75,36 @@ class AdvancedKeyboardFragment : Fragment() {
             buttonExp.setOnClickListener { expressionService.addNumber("e") }
         }
     }
-    private fun setBracketListeners(){
-        binding.apply {
-            buttonLeftBracket.setOnClickListener  { expressionService.addFunction("(") }
-            buttonRightBracket.setOnClickListener { expressionService.addFunction(")") }
-        }
-    }
     private fun setOperatorListeners(){
         binding.apply {
             buttonPow.setOnClickListener       { expressionService.addOperator("^") }
             buttonFactorial.setOnClickListener { expressionService.addOperator("!") }
         }
     }
+    private fun setActionListeners(){
+        binding.apply {
+            buttonRadical.setOnClickListener { expressionService.onSelectedRad() }
+            buttonDeg.setOnClickListener { expressionService.onSelectedDeg() }
+            buttonDefaultFragment.setOnClickListener { switchToDefaultKeyboard() }
+        }
+    }
 
     private fun switchToDefaultKeyboard(){
         activity!!.findViewById<ViewPager>(R.id.fragmentsLayout).setCurrentItem(0, true)
+    }
+
+    private fun activateButton(button: View){
+        button.isSelected = true
+        if(button is Button){
+            button.setTextColor(resources.getColor(R.color.keyboardBackgroundColor))
+        }
+    }
+
+    private fun deactivateButton(button: View){
+        button.isSelected = false
+        if(button is Button){
+            button.setTextColor(resources.getColor(R.color.liteBlue))
+        }
     }
 
     companion object {

@@ -9,4 +9,5 @@
     <color name="focusedView">#ffffffff</color>
     <color name="liteGray">#D5D5D5</color>
     <color name="superLiteBlue">#A2B6CE</color>
+    <color name="keyboardBackgroundColor">#FFFFFF</color>
 </resources>

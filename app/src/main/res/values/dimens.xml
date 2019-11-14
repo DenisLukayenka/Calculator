@@ -10,4 +10,7 @@
     <dimen name="commandsVerticalWeight">1</dimen>
     <dimen name="buttonHorizontalWeight">4</dimen>
     <dimen name="expressionHorizontalWeight">3</dimen>
+
+    <dimen name="pressedButtonCorner">12dp</dimen>
+    <dimen name="selectedButtonCorner">10dp</dimen>
 </resources>

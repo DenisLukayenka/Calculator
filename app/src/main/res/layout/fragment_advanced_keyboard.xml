@@ -43,6 +43,7 @@
         <Button
             android:id="@+id/button_radical"
             style="@style/action_button_style"
+            android:background="@drawable/button_activated"
             android:text="@string/radical_text"
             android:textAllCaps="false"
             app:layout_constraintBottom_toTopOf="@+id/button_pow"
@@ -97,6 +98,7 @@
         <Button
             android:id="@+id/button_deg"
             style="@style/action_button_style"
+            android:background="@drawable/button_activated"
             android:text="@string/deg_text"
             app:layout_constraintBottom_toTopOf="@+id/button_log"
             app:layout_constraintEnd_toStartOf="@+id/button_radical"
