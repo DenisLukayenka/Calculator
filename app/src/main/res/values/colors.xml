@@ -8,4 +8,5 @@
     <color name="notFocusedView">#B0FFFFFF</color>
     <color name="focusedView">#ffffffff</color>
     <color name="liteGray">#D5D5D5</color>
+    <color name="superLiteBlue">#A2B6CE</color>
 </resources>
