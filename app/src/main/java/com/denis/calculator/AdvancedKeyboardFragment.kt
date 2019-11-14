@@ -53,6 +53,7 @@ class AdvancedKeyboardFragment : Fragment() {
             buttonTan.setOnClickListener { expressionService.addFunction("tan(") }
             buttonLn.setOnClickListener  { expressionService.addFunction("ln(") }
             buttonLog.setOnClickListener { expressionService.addFunction("lg(") }
+            buttonSqrt.setOnClickListener{ expressionService.addFunction("√(") }
         }
     }
     private fun setConstantsListeners(){

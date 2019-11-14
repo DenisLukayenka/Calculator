@@ -1,17 +1,18 @@
 package com.denis.calculator.services
 
 import com.denis.calculator.ExpressionResultViewModel
-import com.denis.calculator.functions.FuncLg
-import com.denis.calculator.functions.FuncLn
-import com.denis.calculator.operators.DegreeOperator
-import com.denis.calculator.operators.OperatorFactorial
+import com.denis.calculator.functions.*
+import com.denis.calculator.operators.*
 import net.objecthunter.exp4j.ExpressionBuilder
 import java.util.*
 
 class ExpressionService(private val viewModel: ExpressionResultViewModel){
+    private val regexFunctions =  Regex("(sin\\()|(cos\\()|(tan\\()|(ln\\()|(lg\\()|(√\\()\$")
     private val maxDoubleValueLength: Int = 10
     private val operators = "%/*-+^!"
-    private val regexFunctions =  Regex("(sin\\()|(cos\\()|(tan\\()|(ln\\()|(lg\\()\$")
+    private val replaceFunctions = mapOf(
+        "√" to "sqrt"
+    )
 
     fun addNumber(number: String){
         if(viewModel.isResultFocused){
@@ -92,11 +93,11 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
                 ')' -> viewModel.bracketsToClose++
                 '(' -> viewModel.bracketsToClose--
             }
+
+            removeLastSymbol(expression)
         }
 
-        removeLastSymbol(expression)
         val newExpression = viewModel.getExpressionValue()
-
         if(newExpression.isEmpty()){
             viewModel.clearExpressionData()
             viewModel.addExpressionData("0")
@@ -145,10 +146,21 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
 
         return actualExpression
     }
+    private fun replaceToCorrectFunction(expression: String): String{
+        var actualExpression = expression
+
+        for (entry in replaceFunctions){
+            actualExpression = expression.replace(entry.key, entry.value, true)
+        }
+
+        return actualExpression
+    }
 
     private fun calculateResult(expr: String, brackets: Int): String{
         return try {
-            val actualExpression = prepareExpressionToCalculate(expr, brackets)
+            var actualExpression = prepareExpressionToCalculate(expr, brackets)
+            actualExpression = replaceToCorrectFunction(actualExpression)
+
             val expression = ExpressionBuilder(actualExpression)
                 .functions(FuncLg(), FuncLn())
                 .operator(OperatorFactorial(), DegreeOperator())
