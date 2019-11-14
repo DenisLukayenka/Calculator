@@ -6,16 +6,24 @@ import com.denis.calculator.operators.*
 import net.objecthunter.exp4j.ExpressionBuilder
 import net.objecthunter.exp4j.function.Function
 import java.util.*
+import kotlin.math.round
 
 class ExpressionService(private val viewModel: ExpressionResultViewModel){
-    private val regexFunctions =  Regex("(sin\\()|(cos\\()|(tan\\()|(ln\\()|(lg\\()|(√\\()\$")
+    private val regexFunctions =  Regex("((sin\\()|(cos\\()|(tan\\()|(ln\\()|(lg\\()|(√\\())\$")
+
     private val maxDoubleValueLength: Int = 10
+    private val MAX_EXPRESSION_LENGTH = 13
+
     private val operators = "%/*-+^!"
     private val replaceFunctions = mapOf(
         "√" to "sqrt"
     )
 
     fun addNumber(number: String){
+        if(viewModel.getExpressionValue().length >= MAX_EXPRESSION_LENGTH){
+            return
+        }
+
         if(viewModel.isResultFocused){
             resetFocusedResult("0")
         }
@@ -33,6 +41,10 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
     }
 
     fun addOperator(operator: String){
+        if(viewModel.getExpressionValue().length >= MAX_EXPRESSION_LENGTH){
+            return
+        }
+
         // Switch to new operator
         // TODO specific for '-' operator
         if(viewModel.isOperatorActive){
@@ -47,6 +59,10 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
     }
 
     fun addFunction(function: String){
+        if(viewModel.getExpressionValue().length >= MAX_EXPRESSION_LENGTH){
+            return
+        }
+
         if(viewModel.isResultFocused){
             resetFocusedResult("0")
         }
@@ -162,25 +178,19 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
     }
 
     private fun convertCalculateResultToString(result: Double): String{
-        val longResult = result.toLong()
+        val actualResult = result.round(maxDoubleValueLength)
+        val longResult = actualResult.toLong()
 
         return if(longResult.toDouble() == result){
             longResult.toString()
         } else {
-            var resultText = result.toString()
-            if(resultText.length > maxDoubleValueLength){
-                resultText = resultText.substring(0, maxDoubleValueLength)
-            }
-            resultText
+            actualResult.toString()
         }
     }
     private fun prepareExpressionToCalculate(expression: String, bracketsCount: Int): String{
         var actualExpression = expression.toLowerCase(Locale.ENGLISH)
-        var bracketsToAdd = bracketsCount
-
-        while (bracketsToAdd > 0){
+        repeat(bracketsCount){
             actualExpression += ")"
-            bracketsToAdd--
         }
 
         val lastSymbol = expression.last()
@@ -267,6 +277,16 @@ class ExpressionService(private val viewModel: ExpressionResultViewModel){
     }
     private fun removeLastSymbol(expression: String){
         viewModel.expression.value = expression.substring(0, expression.length - 1)
+    }
+
+    private fun Double.round(decimals: Int): Double {
+        var multiplier = 1.0
+
+        repeat(decimals){
+            multiplier *= 10
+        }
+
+        return round(this * multiplier) / multiplier
     }
 
     fun onSelectedDeg(){

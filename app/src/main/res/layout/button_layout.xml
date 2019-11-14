@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:background="@drawable/button_default_ripple_selector"
+    android:textAppearance="?android:textAppearanceLarge"
+    android:textColor="@drawable/button_text_selector"
+    android:stateListAnimator="@animator/button_default_elevation">
+
+</Button>

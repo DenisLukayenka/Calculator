@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
@@ -30,6 +31,7 @@ class DefaultKeyboardFragment : Fragment() {
         viewModel = activity?.run {
             ViewModelProviders.of(this)[ExpressionResultViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
+
 
         expressionService = ExpressionService(viewModel)
         setNumericListeners()

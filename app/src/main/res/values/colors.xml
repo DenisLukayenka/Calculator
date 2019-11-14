@@ -10,4 +10,6 @@
     <color name="liteGray">#D5D5D5</color>
     <color name="superLiteBlue">#A2B6CE</color>
     <color name="keyboardBackgroundColor">#FFFFFF</color>
+    <color name="normalButtonColor">#FFFFFF</color>
+    <color name="pressedButtonColor">#6694B9</color>
 </resources>

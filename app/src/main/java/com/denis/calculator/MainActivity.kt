@@ -9,6 +9,12 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.denis.calculator.adapters.ViewPagerAdapter
 import com.denis.calculator.databinding.ActivityMainBinding
+import android.view.ViewGroup
+import android.widget.Button
+import android.view.View
+import android.widget.Space
+import android.graphics.Outline
+import android.view.ViewOutlineProvider
 
 
 class MainActivity : AppCompatActivity() {

@@ -11,6 +11,6 @@
     <dimen name="buttonHorizontalWeight">4</dimen>
     <dimen name="expressionHorizontalWeight">3</dimen>
 
-    <dimen name="pressedButtonCorner">12dp</dimen>
-    <dimen name="selectedButtonCorner">10dp</dimen>
+    <dimen name="pressedButtonCorner">10dp</dimen>
+    <dimen name="selectedButtonCorner">8dp</dimen>
 </resources>
