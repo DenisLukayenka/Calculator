@@ -75,7 +75,7 @@ class DefaultKeyboardFragment : Fragment() {
     }
 
     private fun switchToAdvancedKeyboard(){
-        activity!!.findViewById<ViewPager>(R.id.fragmentsLayout).setCurrentItem(1, true)
+        activity!!.findViewById<ViewPager>(R.id.fragmentsLayout).setCurrentItem(0, true)
     }
 
     companion object {

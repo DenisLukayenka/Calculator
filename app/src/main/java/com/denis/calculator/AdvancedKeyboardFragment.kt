@@ -90,7 +90,7 @@ class AdvancedKeyboardFragment : Fragment() {
     }
 
     private fun switchToDefaultKeyboard(){
-        activity!!.findViewById<ViewPager>(R.id.fragmentsLayout).setCurrentItem(0, true)
+        activity!!.findViewById<ViewPager>(R.id.fragmentsLayout).setCurrentItem(1, true)
     }
 
     private fun activateButton(button: View){

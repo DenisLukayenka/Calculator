@@ -3,19 +3,11 @@ package com.denis.calculator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.denis.calculator.adapters.ViewPagerAdapter
 import com.denis.calculator.databinding.ActivityMainBinding
-import android.view.ViewGroup
-import android.widget.Button
-import android.view.View
-import android.widget.Space
-import android.graphics.Outline
-import android.view.ViewOutlineProvider
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         viewPager = binding.fragmentsLayout
         pagerAdapter = ViewPagerAdapter(supportFragmentManager)
         viewPager.adapter = pagerAdapter
+        viewPager.currentItem = 1
     }
 
     private fun onResultFocusChanged(isResultOnFocus: Boolean){

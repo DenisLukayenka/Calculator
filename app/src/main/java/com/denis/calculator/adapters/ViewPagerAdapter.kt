@@ -16,8 +16,8 @@ class ViewPagerAdapter(fm: FragmentManager) :
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> DefaultKeyboardFragment.newInstance()
-            1 -> AdvancedKeyboardFragment.newInstance()
+            1 -> DefaultKeyboardFragment.newInstance()
+            0 -> AdvancedKeyboardFragment.newInstance()
             else -> {
                 throw Exception()
             }

@@ -33,15 +33,18 @@
             app:layout_constraintStart_toEndOf="@+id/button_dot"
             app:layout_constraintTop_toBottomOf="@+id/button_plus" />
 
-        <Button
+        <ImageView
             android:id="@+id/button_fragment_advanced"
             style="@style/action_button_style"
-            android:text="@string/button_keyboard_switch"
+            android:contentDescription="@string/backspace_description"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/arrow_left_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button_0"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_1" />
+            app:layout_constraintTop_toBottomOf="@+id/button_1"/>
 
         <Button
             android:id="@+id/button_2"
@@ -104,7 +107,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+       <!-- <Button
             android:id="@+id/button_remove"
             style="@style/action_button_style"
             android:text="@string/button_remove_text"
@@ -112,22 +115,20 @@
             app:layout_constraintEnd_toStartOf="@+id/button_modulo"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_clear"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" /> -->
 
-        <!--  <ImageView
-            android:id="@+id/button_remove2"
+          <ImageView
+            android:id="@+id/button_remove"
             style="@style/action_button_style"
-            android:adjustViewBounds="true"
             android:contentDescription="@string/backspace_description"
-            android:cropToPadding="false"
-            android:padding="10dp"
+              android:padding="10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/backspace_icon"
             app:layout_constraintBottom_toTopOf="@+id/button_8"
             app:layout_constraintEnd_toStartOf="@+id/button_modulo"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_clear"
-            app:layout_constraintTop_toTopOf="parent" /> -->
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/button_divide"
